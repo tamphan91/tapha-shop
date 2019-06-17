@@ -1,0 +1,14 @@
+#search {
+    padding: 0;
+    margin-left: 5px;
+    width: 40%;
+    outline: none;
+    font-style: italic;
+    font-weight: lighter;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+/* 
+.account-form{
+    border-bottom: solid;
+} */

@@ -1,0 +1,115 @@
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" [ngStyle]="{'display': showMySideBar ? 'block' : 'none'}">
+  <div class="w3-container w3-display-container w3-padding-16">
+    <i (click)="toggleMySideBar()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
+    <h3 class="w3-wide w3-hide-medium">
+      <b style="cursor: pointer;" routerLink="/" (click)="activeIsExpand(''); changeTitle('New arrivals')">{{logo}}</b>
+    </h3>
+  </div>
+  <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
+    <div class="row" style="padding-left: 16px">
+      <div class="w3-col" style="width: 0;">
+        <i (click)="searchProducts()" class="fa fa-search" style="cursor: pointer;"></i>
+      </div>
+      <div class="w3-rest w3-container">
+        <input (keyup.enter)="searchProducts()" [value]="searchString" (change)="changeSearch(search.value)" #search id="search"
+          class="w3-input w3-animate-input" type="text" placeholder="SEARCH">
+      </div>
+    </div>
+    <div *ngFor="let productType of productTypeList">
+      <a *ngIf="productType.productTypes.length == 0" routerLink="/products/{{productType.id}}" class="w3-bar-item w3-button" routerLinkActive="w3-white"
+        (click)="expandName == productType.name ? activeIsExpand('') : activeIsExpand(productType.name); changeTitle(productType.description);">
+        {{productType.name}}
+        <i *ngIf="productType.productTypes.length > 0" class="fa" [ngClass]="expandName == productType.name ? 'fa-caret-up' : 'fa-caret-down'"></i>
+      </a>
+      <a *ngIf="productType.productTypes.length > 0" class="w3-bar-item w3-button" routerLinkActive="w3-white" (click)="expandName == productType.name ? activeIsExpand('') : activeIsExpand(productType.name)">
+        {{productType.name}}
+        <i *ngIf="productType.productTypes.length > 0" class="fa" [ngClass]="expandName == productType.name ? 'fa-caret-up' : 'fa-caret-down'"></i>
+      </a>
+      <div *ngIf="productType.productTypes.length > 0" [ngClass]="expandName == productType.name ? 'w3-show' : ''" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+        <a *ngFor="let sub of productType.productTypes" (click)="changeTitle(sub.description)" #temp="routerLinkActive" routerLink="/products/{{sub.id}}"
+          routerLinkActive="w3-light-grey" class="w3-bar-item w3-button">
+          <i class="fa fa-caret-right w3-margin-right" *ngIf="temp.isActive"></i>{{sub.name}}</a>
+      </div>
+    </div>
+  </div>
+  <!-- <app-login [logo]="logo" (valueChange)="displayUser($event)"></app-login> -->
+  <a *ngIf="!isLogin" onclick="document.getElementById('id02').style.display='block'" class="w3-bar-item w3-button w3-padding"
+    (click)="changeTabIndex(1)">Sign In</a>
+  <a *ngIf="!isLogin" onclick="document.getElementById('id02').style.display='block'" class="w3-bar-item w3-button w3-padding"
+    (click)="changeTabIndex(2)">Create Account</a>
+  <a *ngIf="isLogin" class="w3-bar-item w3-button" (click)="expandName == firstname ? activeIsExpand('') : activeIsExpand(firstname);">
+    <i class=" fa fa-user"></i>
+    {{firstname}}
+    <i class="fa" [ngClass]="expandName == firstname ? 'fa-caret-up' : 'fa-caret-down'"></i>
+  </a>
+  <div *ngIf="isLogin" id="demoAcc" [ngClass]="expandName == firstname ? 'w3-show' : ''" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+    <a (click)="activeIsExpand(firstname);changeTitle('Information')" #temp1="routerLinkActive" routerLink="/management/information"
+      routerLinkActive="w3-light-grey" class="w3-bar-item w3-button">
+      <i class="fa fa-caret-right w3-margin-right" *ngIf="temp1.isActive"></i>Information</a>
+    <a (click)="activeIsExpand(firstname);changeTitle('History')" #temp="routerLinkActive" routerLink="/management/history" routerLinkActive="w3-light-grey"
+      class="w3-bar-item w3-button">
+      <i class="fa fa-caret-right w3-margin-right" *ngIf="temp.isActive"></i>History</a>
+    <a *ngIf="currentUser.email === 'tamphan91@icloud.com'" routerLink="/admin" class="w3-bar-item w3-button">Management</a>
+    <a (click)="logOut()" class="w3-bar-item w3-button">Logout</a>
+  </div>
+  <!-- <a class="w3-bar-item w3-button w3-padding">Contact</a>
+  <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding" onclick="document.getElementById('newsletter').style.display='block'">Newsletter</a>
+  <a class="w3-bar-item w3-button w3-padding">Subscribe</a> -->
+  <a routerLink="{{currentUrl}}" queryParamsHandling="preserve" fragment="footer" class="w3-bar-item w3-button w3-padding">Contact</a>
+  <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding" onclick="document.getElementById('newsletter').style.display='block'">Newsletter</a>
+  <a routerLink="{{currentUrl}}" queryParamsHandling="preserve" fragment="subscribe" class="w3-bar-item w3-button w3-padding">Subscribe</a>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
+  <!-- Trigger/Open the Modal -->
+  <div class="w3-bar-item w3-padding-24 w3-right">
+    <i style="cursor: pointer;" onclick="document.getElementById('id01').style.display='block'" class="fa fa-shopping-cart w3-margin-right">
+      <sup style="background-color: #c00; border-radius: 100%; left: -0.3em">
+        <span class="w3-badge">{{itemsCountInCart}}</span>
+      </sup>
+    </i>
+  </div>
+  <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-wide" (click)="toggleMySideBar()">
+    <i class="fa fa-bars"></i>
+  </a>
+  <div class="w3-display-middle" routerLink="/" (click)="activeIsExpand(''); changeTitle('New arrivals')" style="cursor: pointer;">{{logo}}</div>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" (click)="toggleMySideBar()" style="cursor:pointer" title="close side menu" [ngStyle]="{'display': showMySideBar ? 'block' : 'none'}"></div>
+
+<!-- Newsletter Modal -->
+<div id="newsletter" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom" style="padding:32px">
+    <div class="w3-container w3-white w3-center">
+      <i onclick="document.getElementById('newsletter').style.display='none'" class="fa fa-remove w3-right w3-button w3-transparent w3-xxlarge"></i>
+      <h2 class="w3-wide">NEWSLETTER</h2>
+      <p>Join our mailing list to receive updates on new arrivals and special offers.</p>
+      <p>
+        <input class="w3-input w3-border" type="text" placeholder="Enter e-mail">
+      </p>
+      <button type="button" class="w3-button w3-padding-large w3-red w3-margin-bottom" onclick="document.getElementById('newsletter').style.display='none'">Subscribe</button>
+    </div>
+  </div>
+</div>
+<div class="w3-main" style="margin-left:250px">
+  <!-- Push down content on small screens -->
+  <div class="w3-hide-large" style="margin-top:83px"></div>
+
+  <!-- Top header -->
+  <div class="w3-container w3-xlarge">
+    <p class="w3-left" id="title">{{title}}</p>
+    <p class="w3-right w3-hide-small w3-hide-medium">
+      <!-- Trigger/Open the Modal -->
+      <i style="cursor: pointer;" onclick="document.getElementById('id01').style.display='block'" class="fa fa-shopping-cart w3-margin-right">
+        <sup style="background-color: #c00; border-radius: 100%; left: -0.3em">
+          <span class="w3-badge">{{itemsCountInCart}}</span>
+        </sup>
+      </i>
+    </p>
+  </div>
+</div>
+<app-cart></app-cart>
+<app-login [logo]="logo" (valueChange)="displayUser($event)" (valueChange)="checkLogin($event)" [tabIndex]="tabIndex"></app-login>

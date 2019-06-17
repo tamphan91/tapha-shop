@@ -1,0 +1,180 @@
+<div style="z-index: 9999;" [ngStyle]="{'display': showImage ? 'block' : ''}" id="modal001" class="w3-modal" (click)="showImageModal('')">
+  <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+  <div class="w3-modal-content w3-animate-zoom">
+    <img src="{{currentSrcImage}}" id="img001" style="width:100%">
+  </div>
+</div>
+<div class="w3-container" *ngIf="productTypeList">
+  <form #productForm="ngForm">
+    <h2>Products</h2>
+    <button type="button" [disabled]="(currentIdEdit != null && currentIdEdit != -1)" [ngClass]="[currentIdEdit == -1 ? 'w3-red' : 'w3-green', (currentIdEdit != null && currentIdEdit != -1) ? 'w3-disabled' : '']"
+      (click)="toggleAddForm()">
+      <b>{{currentIdEdit == -1 ? '-' : '+'}}</b>
+    </button>
+    <input [ngClass]="(currentIdEdit != null && currentIdEdit != -1) ? 'w3-disabled' : ''" (keyup.enter)="searchProducts()" #search
+      (change)="changeSearch(search.value)" [value]="searchString" [disabled]="currentIdEdit != null" style="margin: 1px" placeholder="search..."
+      type="text" />
+    <button [ngClass]="(currentIdEdit != null && currentIdEdit != -1) ? 'w3-disabled' : ''" type="button" (click)="searchProducts()"
+      [disabled]="currentIdEdit != null">
+      <i class="fa fa-search" style="cursor: pointer;"></i>
+    </button>
+    {{message}}
+    <div class="w3-responsive">
+      <table class="w3-table-all">
+        <tr class="w3-orange">
+          <th>No</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Sale</th>
+          <th>State</th>
+          <th>Url</th>
+          <th>Images</th>
+          <th>ProductTypeId</th>
+          <th>Details</th>
+          <th>MaterialandCare</th>
+          <th></th>
+        </tr>
+        <tr *ngIf="currentIdEdit == -1">
+          <td>
+            <button type="button" (click)="closeAction()" class="w3-red">x</button>
+          </td>
+          <td>
+            <input name="name" required [(ngModel)]="productToAdd.name">
+          </td>
+          <td>
+            <input required name="price" style="width: 55px" [(ngModel)]="productToAdd.price">
+          </td>
+          <td>
+            <input required name="sale" *ngIf="productToAdd.state == 2" style="width: 55px" [(ngModel)]="productToAdd.sale">
+          </td>
+          <td>
+            <select required name="state" [(ngModel)]="productToAdd.state">
+              <option *ngFor="let tag of tags; let i = index" [ngValue]="i">{{tag}}</option>
+            </select>
+          </td>
+          <td>
+            <input required name="url" [(ngModel)]="productToAdd.url">
+          </td>
+          <td>
+            <div>
+              <input required name="img1" [(ngModel)]="productToAdd.images[0]" />
+              <br>
+              <input required name="img2" [(ngModel)]="productToAdd.images[1]" />
+              <br>
+              <input required name="img3" [(ngModel)]="productToAdd.images[2]" />
+              <br>
+              <input name="img4" [(ngModel)]="productToAdd.images[3]" />
+              <br>
+              <input name="img5" [(ngModel)]="productToAdd.images[4]" />
+              <br>
+              <input name="img6" [(ngModel)]="productToAdd.images[5]" />
+            </div>
+          </td>
+          <td>
+            <select required name="product_type_id" [(ngModel)]="productToAdd.product_type_id">
+              <option *ngFor="let pt of productTypeList" [ngValue]="pt.id">{{pt.description}}</option>
+            </select>
+          </td>
+          <td>
+            <textarea required name="details" [(ngModel)]="productToAdd.details"></textarea>
+          </td>
+          <td>
+            <textarea required name="materialAndCare" [(ngModel)]="productToAdd.materialAndCare"></textarea>
+          </td>
+          <td>
+            <button type="button" [disabled]="productForm.invalid" style="cursor: pointer" (click)="addProduct(productToAdd)">
+              Add
+            </button>
+          </td>
+
+        </tr>
+        <tr *ngFor="let product of productList; let i = index" [ngClass]="[currentIdEdit == product.id ? 'w3-pale-green' : '', !product.state ? 'w3-pale-yellow' : '']">
+          <td>
+            <span *ngIf="currentIdEdit == null">{{i + 1 + pageSize*(currentPage-1)}}</span>
+            <button type="button" (click)="closeAction()" class="w3-red" *ngIf="currentIdEdit == product.id">x</button>
+          </td>
+          <td>
+            {{currentIdEdit == product.id ? '' : product.name}}
+            <input required name="{{'name'+i}}" [(ngModel)]="product.name" *ngIf="currentIdEdit == product.id">
+          </td>
+          <td [ngClass]="product.tag == 'New' ? 'w3-text-green' : ''">
+            {{currentIdEdit == product.id ? '' : '$'+product.price}}
+            <input name="{{'price'+i}}" style="width: 55px" [(ngModel)]="product.price" *ngIf="currentIdEdit == product.id">
+          </td>
+          <td class="w3-text-red">
+            {{currentIdEdit == product.id ? '' : product.sale ? '$'+product.sale : ''}}
+            <input *ngIf="currentIdEdit == product.id && product.state == 2" required name="{{'sale'+i}}" style="width: 55px" [(ngModel)]="product.sale">
+          </td>
+          <td>
+            {{currentIdEdit == product.id ? '' : tags[product.state]}}
+            <select required name="{{'state'+i}}" *ngIf="currentIdEdit == product.id" [(ngModel)]="product.state">
+              <option *ngFor="let tag of tags; let i = index" [ngValue]="i">{{tag}}</option>
+            </select>
+          </td>
+          <td>
+            <img (click)="showImageModal(product.url)" *ngIf="currentIdEdit != product.id" src="{{product.url}}" width="100px">
+            <input required name="{{'url'+i}}" *ngIf="currentIdEdit == product.id" [(ngModel)]="product.url">
+          </td>
+          <td>
+            <div *ngIf="currentIdEdit == product.id">
+              <input required name="{{'images0'+i}}" [(ngModel)]="product.images[0]" />
+              <br>
+              <input required name="{{'images1'+i}}" [(ngModel)]="product.images[1]" />
+              <br>
+              <input required name="{{'images2'+i}}" [(ngModel)]="product.images[2]" />
+              <br>
+              <input name="{{'images3'+i}}" [(ngModel)]="product.images[3]" />
+              <br>
+              <input name="{{'images4'+i}}" [(ngModel)]="product.images[4]" />
+              <br>
+              <input name="{{'images5'+i}}" [(ngModel)]="product.images[5]" />
+              <!-- <input *ngFor="let img of product.images; let i = index"
+               required name="{{'images0'+i}}" [(ngModel)]="product.images[i]" /> -->
+            </div>
+            <div style="min-width: 150px;" *ngIf="currentIdEdit != product.id">
+              <img *ngFor="let image of product.images" src="{{image}}" width="50px" (click)="showImageModal(image)">
+              <!-- <p *ngFor="let image of product.images">{{image}}</p> -->
+            </div>
+          </td>
+          <td>
+            {{currentIdEdit == product.id ? '' : getProductTypeDescription(product.product_type_id)}}
+            <select required name="{{'productTypeId'+i}}" *ngIf="currentIdEdit == product.id" [(ngModel)]="product.product_type_id">
+              <option *ngFor="let pt of productTypeList" [ngValue]="pt.id">{{pt.description}}</option>
+            </select>
+          </td>
+          <td>
+            <!-- <div *ngIf="currentIdEdit != product.id" [innerHTML]="product.details"></div> -->
+            <textarea *ngIf="currentIdEdit == product.id" name="{{'details'+i}}" [(ngModel)]="product.details"></textarea>
+            <!-- <p>Our skinniest fit through the hip & thigh with an 11.5" leg opening, these black jeans feature Advanced Stretch,
+              five-pocket styling and iconic back pocket embroidery Imported</p>
+            <p>Model is 5'11" wearing Size 31x32</p> -->
+          </td>
+          <td>
+            <!-- <div *ngIf="currentIdEdit != product.id" [innerHTML]="product.materialAndCare"></div> -->
+            <textarea *ngIf="currentIdEdit == product.id" name="{{'materialAndCare'+i}}" [(ngModel)]="product.materialAndCare"></textarea>
+          </td>
+          <td>
+            <button type="button" [ngClass]="(productForm.invalid || (currentIdEdit != null &&  currentIdEdit !== product.id)) ? 'w3-disabled' : ''"
+              [disabled]="productForm.invalid || (currentIdEdit != null &&  currentIdEdit !== product.id)" (click)="handleClick(product)">
+              {{currentIdEdit == product.id ? 'Save' : 'Edit'}}
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+</div>
+
+<div class="w3-center">
+  <div class="w3-bar">
+    <a (click)="changeCurrentPage(currentPage-2)" *ngIf="currentPage - 1 > 2" class="w3-button">&laquo;</a>
+    <a (click)="changeCurrentPage(1)" *ngIf="currentPage != 1" class="w3-button">1</a>
+    <a *ngIf="currentPage - 1 > 2">...</a>
+    <a (click)="changeCurrentPage(currentPage-1)" *ngIf="currentPage - 1 > 1" class="w3-button">{{currentPage-1}}</a>
+    <a *ngIf="pageTotal > 0" class="w3-button w3-red">{{currentPage}}</a>
+    <a (click)="changeCurrentPage(currentPage+1)" *ngIf="pageTotal - currentPage > 1" class="w3-button">{{currentPage+1}}</a>
+    <a *ngIf="pageTotal - currentPage > 2">...</a>
+    <a (click)="changeCurrentPage(pageTotal)" *ngIf="pageTotal - currentPage > 0 " class="w3-button">{{pageTotal}}</a>
+    <a (click)="changeCurrentPage(currentPage+2)" *ngIf="pageTotal - currentPage > 2" class="w3-button">&raquo;</a>
+  </div>
+</div>

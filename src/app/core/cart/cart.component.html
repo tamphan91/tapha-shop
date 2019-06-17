@@ -1,0 +1,49 @@
+<!-- The Modal -->
+<div id="id01" class="w3-modal">
+  <div class="w3-modal-content">
+    <div class="w3-container">
+      <h2 class="w3-opacity"><b>SHOPPING BAG</b></h2>
+      <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xxlarge w3-display-topright">&times;</span>
+      <br>
+      <h6 class="w3-right">Total: ${{total}}</h6>
+      <br>
+      <hr>
+      <table class="w3-table w3-bordered w3-card-4">
+        <tr *ngFor="let item of items; index as i">
+          <td style="width:95px">
+            <img onclick="document.getElementById('id01').style.display='none'" routerLink="/products/detail/{{item.id}}" src="{{item.url}}"
+            class="w3-bar-item" style="width:95px; cursor: pointer;">
+          </td>
+          <td>
+            <div class="w3-bar-item">
+              <div onclick="document.getElementById('id01').style.display='none'" routerLink="/products/detail/{{item.id}}" style="cursor: pointer;">
+                <span class="w3-small">{{item.name}}</span>
+                <br>
+                <span class="w3-small">
+                  <b [ngClass]="item.state==2 ? 'original-price' : ''">${{item.price}}</b>
+                  <b *ngIf="item.sale" [ngClass]="item.state==2 ? 'w3-text-red' : ''"> ${{item.sale}}</b>
+                </span>
+                <br>
+                <span class="w3-small">Size: {{item.size}}{{item.color ? ', Color: '+ item.color : ''}}{{item.length ? ', Length: '+ item.length :
+                  ''}}, Art.no. {{item.id}}</span>
+                <br>
+              </div>
+              <span class="w3-small">
+                <select (change)="updateCart()" [(ngModel)]="item.quantity">
+                  <option *ngFor="let q of [1,2,3,4,5,6,7,8,9]" [ngValue]="q">{{q}}</option>
+                </select>
+              </span>
+            </div>
+          </td>
+          <td>
+            <span *ngIf="!isCheckingout" (click)="removeItem(i)" onclick="this.parentElement.style.display='none'" class="w3-bar-item w3-button w3-white w3-xlarge w3-right">×</span>
+          </td>
+        </tr>
+      </table>
+      <h6 class="w3-right">Total: ${{total}}</h6>
+      <br>
+      <hr>
+      <button [disabled]="items.length === 0"  onclick="document.getElementById('id01').style.display='none'" (click)="changeTitle('Checkout')" routerLink="/management/payment" class="w3-button w3-block w3-green w3-section w3-padding" type="submit">CONTINUE TO CHECKOUT</button>
+    </div>
+  </div>
+</div>

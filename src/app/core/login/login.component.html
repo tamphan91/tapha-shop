@@ -1,0 +1,51 @@
+<div id="id02" class="w3-modal" style="z-index: 9999">
+  <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+    <header class="w3-container w3-light-grey">
+      <span onclick="document.getElementById('id02').style.display='none'" class="w3-button w3-light-grey w3-xlarge w3-display-topright">&times;</span>
+      <h2 class="w3-wide">{{logo}} Account</h2>
+    </header>
+
+    <div class="w3-bar w3-border-bottom w3-padding-16">
+      <button [ngClass]="tabIndex == 1 ? 'account-form' : ''" class="tablink w3-bar-item w3-button w3-wide" (click)="changeTabIndex(1)">Sign In</button>
+      <button [ngClass]="tabIndex == 2 ? 'account-form' : ''" class="tablink w3-bar-item w3-button w3-wide" (click)="changeTabIndex(2)">Create Account</button>
+    </div>
+
+    <div class="w3-container">
+      <form #userForm="ngForm" class="w3-container" (ngSubmit)="submit(userForm)">
+        <div class="w3-section">
+          <label for="email">
+            <p>Email</p>
+          </label>
+          <input id="email" [(ngModel)]="email" class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter email"
+            name="email" required>
+          <label *ngIf="tabIndex == 2" for="firstname">
+            <p>Firstname</p>
+          </label>
+          <input *ngIf="tabIndex == 2" id="firstname" [(ngModel)]="firstname" class="w3-input w3-border w3-margin-bottom" type="text"
+            placeholder="Enter firstname" name="firstname" required>
+          <label *ngIf="tabIndex == 2" for="lastname">
+            <p>Lastname</p>
+          </label>
+          <input *ngIf="tabIndex == 2" id="lastname" [(ngModel)]="lastname" class="w3-input w3-border w3-margin-bottom" type="text"
+            placeholder="Enter lastname" name="lastname" required>
+          <label for="psw">
+            <p>Password</p>
+          </label>
+          <input id="psw" [(ngModel)]="password" class="w3-input w3-border" type="password" placeholder="Enter Password" name="psw"
+            required>
+          <span [hidden]="tabIndex == 2" class="w3-right w3-padding w3-hide-small">Forgot
+            <a href="#">password?</a>
+          </span>
+          <br>
+          <p [ngClass]="errorMessage ? 'w3-panel w3-red' : ''">{{errorMessage}}</p>
+          <hr>
+          <button [attr.disabled]="(email && email.length >= 6) && (password && password.length >= 6) ||
+               (tabIndex == 2 && firstname && firstname.length >= 6 && lastname && lastname.length >= 6 && (email && email.length >= 6) && (password && password.length >= 6)) ? null : 'disabled'"
+                class="w3-button w3-block w3-green w3-section w3-padding"
+            type="submit">{{tabIndex == 1 ? 'LOGIN' : 'REGISTER'}}</button>
+        </div>
+      </form>
+      <!-- <input type="button" (click)="submit(null)" value="test"> -->
+    </div>
+  </div>
+</div>

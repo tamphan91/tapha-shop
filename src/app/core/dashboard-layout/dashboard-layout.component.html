@@ -1,0 +1,64 @@
+
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-display-container w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" (click)="toggleMySidebar()"><i class="fa fa-bars"></i>  Menu</button>
+  <!-- <div routerLink="/" class="w3-display-middle">
+    <span class="w3-bar-item" style="cursor: pointer;">Logo 123</span>
+  </div> -->
+  <span routerLink="/" (click)="activeIsExpand(''); changeTitle('New arrivals')" class="w3-bar-item w3-right" style="cursor: pointer;">LOGO</span>
+</div>
+
+<!-- Sidebar/menu -->
+<div [ngStyle]="{'display': showMySidebar ? 'block' : null}" class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="https://www.w3schools.com/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Welcome, <strong>{{email}}</strong></span><br>
+      <a  class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+      <a  class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a routerLink="/admin/settings" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Dashboard</h5>
+  </div>
+  <div class="w3-bar-block">
+    <a class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" (click)="toggleMySidebar()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/home" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Overview</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/products" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cube fa-fw"></i>  Products</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/producttypes" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cube fa-fw"></i>  ProductTypes</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/views" class="w3-bar-item w3-button w3-padding"><i class="fa fa-eye fa-fw"></i>  Views</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/traffic" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Traffic</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/geo" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bullseye fa-fw"></i>  Geo</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/orders" class="w3-bar-item w3-button w3-padding"><i class="fa fa-diamond fa-fw"></i>  Orders</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/news" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bell fa-fw"></i>  News</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/general" class="w3-bar-item w3-button w3-padding"><i class="fa fa-bank fa-fw"></i>  General</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/history" class="w3-bar-item w3-button w3-padding"><i class="fa fa-history fa-fw"></i>  History</a>
+    <a routerLinkActive="w3-blue" routerLink="/admin/settings" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Settings</a><br><br>
+  </div>
+</div>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" (click)="toggleMySidebar()" [ngStyle]="{'display': showMySidebar ? 'block' : 'none'}" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <router-outlet></router-outlet>
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-light-grey">
+    <h4>FOOTER</h4>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+  </footer>
+
+  <!-- End page content -->
+</div>
+
+</body>

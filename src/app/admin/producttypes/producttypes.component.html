@@ -1,0 +1,110 @@
+<div style="z-index: 9999;" [ngStyle]="{'display': showImage ? 'block' : ''}" id="modal001" class="w3-modal" (click)="showImageModal('')">
+  <span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+  <div class="w3-modal-content w3-animate-zoom">
+    <img src="{{currentSrcImage}}" id="img001" style="width:100%">
+  </div>
+</div>
+<div class="w3-container" *ngIf="productTypeList">
+  <form #productTypeForm="ngForm">
+    <h2>ProductTypes</h2>
+    <button type="button" [disabled]="(currentIdEdit != null && currentIdEdit != -1)" [ngClass]="[currentIdEdit == -1 ? 'w3-red' : 'w3-green', (currentIdEdit != null && currentIdEdit != -1) ? 'w3-disabled' : '']"
+      (click)="toggleAddForm()">
+      <b>{{currentIdEdit == -1 ? '-' : '+'}}</b>
+    </button>
+    <input [ngClass]="(currentIdEdit != null && currentIdEdit != -1) ? 'w3-disabled' : ''" (keyup.enter)="searchProducts()" #search
+      (change)="changeSearch(search.value)" [value]="searchString" [disabled]="currentIdEdit != null" style="margin: 1px" placeholder="search..."
+      type="text" />
+    <button [ngClass]="(currentIdEdit != null && currentIdEdit != -1) ? 'w3-disabled' : ''" type="button" (click)="searchProducts()"
+      [disabled]="currentIdEdit != null">
+      <i class="fa fa-search" style="cursor: pointer;"></i>
+    </button>
+    {{message}}
+    <div class="w3-responsive">
+      <table class="w3-table-all">
+        <tr class="w3-orange">
+          <th>No</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>ProductType</th>
+          <th>Title1</th>
+          <th>Title2</th>
+          <th>Url</th>
+          <th></th>
+        </tr>
+        <tr *ngIf="currentIdEdit == -1">
+          <td>
+            <button type="button" (click)="closeAction()" class="w3-red">x</button>
+          </td>
+          <td>
+            <input name="name" required [(ngModel)]="productTypeToAdd.name">
+          </td>
+          <td>
+            <input name="description" required [(ngModel)]="productTypeToAdd.description">
+          </td>
+          <td>
+            <select name="productTypeId" [(ngModel)]="productTypeToAdd.productTypeId">
+              <option [ngValue]="undefined">Root</option>
+              <option *ngFor="let pt of productTypeList" [ngValue]="pt.id">{{pt.description}}</option>
+            </select>
+          </td>
+          <td>
+            <input name="title1" required [(ngModel)]="productTypeToAdd.title1">
+          </td>
+          <td>
+            <input name="title2" required [(ngModel)]="productTypeToAdd.title2">
+          </td>
+          <td>
+            <input name="url" required [(ngModel)]="productTypeToAdd.url">
+          </td>
+          <td>
+            <button type="button" [disabled]="productTypeForm.invalid" style="cursor: pointer" (click)="addProductType(productTypeToAdd)">
+              Add
+            </button>
+          </td>
+        </tr>
+        <tr *ngFor="let productType of productTypeList; let i = index">
+          <td>
+            <span *ngIf="currentIdEdit == null">{{i + 1}}</span>
+            <button type="button" (click)="closeAction()" class="w3-red" *ngIf="currentIdEdit == productType.id">x</button>
+          </td>
+          <td>
+            {{currentIdEdit == productType.id ? '' : productType.name}}
+            <input required name="{{'name'+i}}" [(ngModel)]="productType.name" *ngIf="currentIdEdit == productType.id">
+          </td>
+          <td>
+            {{currentIdEdit == productType.id ? '' : productType.description}}
+            <input required name="{{'description'+i}}" [(ngModel)]="productType.description" *ngIf="currentIdEdit == productType.id">
+          </td>
+          <td>
+            {{currentIdEdit == productType.id ? '' : getProductTypeName(productType.productTypeId)}}
+            <select [disabled]="getProductTypeName(productType.productTypeId) === ''" name="{{'productTypeId'+i}}" *ngIf="currentIdEdit == productType.id"
+              [(ngModel)]="productType.productTypeId">
+              <option [ngValue]="null">Root</option>
+              <option *ngFor="let pt of getProductTypeList(productType.id)" [ngValue]="pt.id">{{pt.name}}</option>
+            </select>
+          </td>
+          <td>
+            {{currentIdEdit == productType.id ? '' : productType.title1}}
+            <input required name="{{'title1'+i}}" [(ngModel)]="productType.title1" *ngIf="currentIdEdit == productType.id">
+          </td>
+          <td>
+            {{currentIdEdit == productType.id ? '' : productType.title2}}
+            <input required name="{{'title2'+i}}" [(ngModel)]="productType.title2" *ngIf="currentIdEdit == productType.id">
+          </td>
+          <td>
+            <!-- {{currentIdEdit == productType.id ? '' : productType.url}} -->
+            <img (click)="showImageModal(productType.url)" src="{{productType.url}}" style="width: 200px;" />
+            <input required name="{{'url'+i}}" [(ngModel)]="productType.url" *ngIf="currentIdEdit == productType.id">
+          </td>
+          <td>
+            <button type="button" [ngClass]="(productTypeForm.invalid 
+              || (currentIdEdit != null &&  currentIdEdit !== productType.id)) ? 'w3-disabled' : ''" [disabled]="productTypeForm.invalid || (currentIdEdit != null &&  currentIdEdit !== productType.id)"
+              (click)="handleClick(productType)">
+              {{currentIdEdit == productType.id ? 'Save' : 'Edit'}}
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+</div>

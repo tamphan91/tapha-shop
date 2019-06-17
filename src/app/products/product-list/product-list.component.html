@@ -1,0 +1,46 @@
+<!-- Image header -->
+<div [hidden]='searchString' class="w3-display-container w3-container">
+  <img src="{{currentProductType ? currentProductType.url : 'assets/images/jeans.jpg'}}" style="width:100%">
+  <div class="w3-display-topleft w3-text-white" style="padding:24px 48px">
+    <h1  class="w3-jumbo w3-hide-small">{{currentProductType ? currentProductType.title1 : 'New arrivals'}}</h1>
+    <h1 class="w3-hide-large w3-hide-medium">{{currentProductType ? currentProductType.title1 : 'New arrivals'}}</h1>
+    <h1 class="w3-hide-small">{{currentProductType ? currentProductType.title1 : 'COLLECTION 2019'}}</h1>
+    <p>
+      <a routerLink="." queryParamsHandling="preserve" fragment="product" class="w3-button w3-black w3-padding-large w3-large">SHOP NOW</a>
+      <!-- <a class="w3-button w3-black w3-padding-large w3-large">SHOP NOW</a> -->
+    </p>
+  </div>
+</div>
+<div class="w3-container w3-text-grey" id="product">
+  <p>{{currentProductList.length > 0 ? currentProductList.length + ' items' : 'item not found'}}</p>
+</div>
+
+<!-- Product grid -->
+<div class="w3-row">
+    <div class="w3-col l3 s6" *ngFor="let product of currentProductList">
+        <div class="w3-container" routerLink="/products/detail/{{product.id}}">
+          <div class="w3-display-container">
+            <img src="{{product.url}}" style="width:100%">
+            <div class="w3-display-middle w3-display-hover" style="width: 100%">
+                <img src="{{product.images[1]}}" alt="Avatar" style="width:100%">
+              </div>
+            <span style="transform: rotate(-15deg);" class="w3-tag w3-display-topleft" [ngClass]="product.state == 2 ? 'w3-red' : product.state == 3 ? 'w3-green' : ''">
+              {{getTagName(product.state)}}</span>
+            <div class="w3-display-middle w3-display-hover">
+              <button class="w3-button w3-black">Buy now
+                <i class="fa fa-shopping-cart"></i>
+              </button>
+            </div>
+          </div>
+          <div style="min-height: 66px">
+            <p style="font-family: 'Times New Roman', Times, serif">
+              {{product.name}}<br>
+              <b [ngClass]="product.state == 2 ? 'original-price' : ''">${{product.price}}</b>
+              <b [ngClass]="product.state == 2 ? 'w3-text-red' : ''"> ${{product.sale}}</b>
+            </p>
+          </div>
+        </div>
+      </div>
+</div>
+<button *ngIf="canLoadMore" (click)="loadMore()" class="w3-button w3-block w3-black">Load More...</button>
+<br>

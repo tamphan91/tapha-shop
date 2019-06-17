@@ -1,0 +1,178 @@
+<form class="w3-container w3-light-grey" [formGroup]="customerForm" #formDir="ngForm">
+  <div class="w3-section">
+    <span *ngIf="!currentUser">
+      <button onclick="document.getElementById('id02').style.display='block'" (click)="changeTabIndex(1)" class="w3-button w3-white w3-border w3-border-black w3-round">SIGN IN</button> |
+      <button onclick="document.getElementById('id02').style.display='block'" (click)="changeTabIndex(2)" class="w3-button w3-light-grey w3-border w3-border-black w3-round">JOIN</button> |
+    </span>
+    <button class="w3-button w3-black w3-border w3-border-black w3-round" (click)="toggleItems()">
+      <b>
+        Items
+        <i class="fa" [ngClass]="isShowItem ? 'fa-caret-up' : 'fa-caret-down'"></i>
+      </b>
+    </button>
+  </div>
+  <div *ngIf="isShowItem">
+    <table class="w3-table w3-bordered">
+      <tr *ngFor="let item of items" routerLink="/products/detail/{{item.id}}">
+        <td style="text-align: right">
+          <img width="100px" height="125px" src="{{item.url}}">
+        </td>
+        <td>
+          <b>{{item.name}}</b>
+          <br>
+          <br> {{getItemInfo(item.color,item.size)}}
+          <br>
+          <b>${{item.price}}
+            <span style="color: red">{{item.sale ? '$'+item.sale : ''}}</span>
+          </b>
+          X{{item.quantity}}
+        </td>
+      </tr>
+      <tr style="border: none">
+        <td>Items({{getQuantityTotal()}})</td>
+        <td style="text-align: right">${{total}}</td>
+      </tr>
+      <tr style="border: none">
+        <td>Shipping & Handling</td>
+        <td style="text-align: right">$10</td>
+      </tr>
+      <tr style="border: none">
+        <td>
+          <b>Order Total</b>
+        </td>
+        <td style="text-align: right">
+          <b>${{total+10}}</b>
+        </td>
+      </tr>
+    </table>
+    <br>
+    <br>
+  </div>
+  <span class="w3-badge" [ngClass]="step === 1 ? 'w3-black' : 'w3-green'">{{step !== 1 ? '' : 1}}
+    <i *ngIf="step !== 1" class="fa fa-check"></i>
+  </span>
+  <b> Order Contact </b>
+  <u style="cursor: pointer;" (click)="changeStep(1)" [hidden]="step === 1 || step > 3">Edit</u>
+  <!-- <i class="fa fa-check-circle w3-green" [hidden]="step !== 1"></i> Order Contact <u style="cursor: pointer;" (click)="changeStep(1)" [hidden]="step === 1">Edit</u> -->
+  <p [hidden]="step < 2">
+    {{customerForm.value.email}}
+    <br>{{customerForm.value.phone}}
+  </p>
+  <p [hidden]="step !== 1">
+    <label for="emailP">Email Address</label>
+    <input id="emailP" formControlName="email" class="w3-input w3-border w3-round" type="text">
+
+    <span>
+      <div *ngIf="email.invalid && (email.dirty || email.touched)" class="w3-text-red">
+
+        <div *ngIf="email.errors.required">
+          Email is required.
+        </div>
+        <div *ngIf="email.errors.email">
+          Email is invalid
+        </div>
+      </div>
+    </span>
+
+    <label for="phone">Phone Number</label>
+    <input id="phone" formControlName="phone" class="w3-input w3-border w3-round-large" type="text">
+    <span>
+      <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="w3-text-red">
+
+        <div *ngIf="phone.errors.required">
+          Phone is required.
+        </div>
+        <div *ngIf="phone.errors?.pattern">
+          Phone is invalid.
+        </div>
+      </div>
+    </span>
+    <br>
+    <button [disabled]="customerForm.invalid" class="w3-button w3-block w3-green" (click)="changeStep(2)">Save & Continue</button>
+  </p>
+  <!-- <hr> -->
+  <span class="w3-badge" [ngClass]="step < 3 ? 'w3-black' : 'w3-green'">{{step
+    < 3 ? 2 : ''}}<i *ngIf="step > 2" class="fa fa-check">
+      </i>
+  </span>
+  <b> Shipping Info </b>
+  <u style="cursor: pointer;" (click)="changeStep(2)" [hidden]="step < 3 || step > 3">Edit</u>
+  <p [hidden]="step < 3">
+    {{customerForm.value.firstname + ' ' + customerForm.value.lastname}}
+    <br>{{(customerForm.value.address)}}
+  </p>
+  <div [hidden]="step !== 2">
+    <!-- <span class="w3-badge">2</span> Shipping Info <br> -->
+    <label for="firstname">First Name</label>
+    <input id="firstname" formControlName="firstname" class="w3-input w3-border w3-round-large" type="text">
+    <span>
+      <div *ngIf="firstname.invalid && (firstname.dirty || firstname.touched)" class="w3-text-red">
+
+        <div *ngIf="firstname.errors.required">
+          First name is required.
+        </div>
+      </div>
+    </span>
+    <label for="lastname">Last Name</label>
+    <input id="lastname" formControlName="lastname" class="w3-input w3-border w3-round-large" type="text">
+    <span>
+      <div *ngIf="lastname.invalid && (lastname.dirty || lastname.touched)" class="w3-text-red">
+
+        <div *ngIf="lastname.errors.required">
+          Last name is required.
+        </div>
+      </div>
+    </span>
+    <label for="address">Address</label>
+    <input id="address" formControlName="address" class="w3-input w3-border w3-round-large" type="text">
+    <span>
+      <div *ngIf="address.invalid && (address.dirty || address.touched)" class="w3-text-red">
+
+        <div *ngIf="address.errors.required">
+          Address is required.
+        </div>
+        <div *ngIf="address.errors.minlength">
+          Address must be at least 10 characters long.
+        </div>
+      </div>
+    </span>
+    <br>
+    <button [disabled]="customerForm.invalid" class="w3-button w3-block w3-green" (click)="changeStep(3)">Save & Continue</button>
+    <hr>
+
+  </div>
+  <div [hidden]="step < 3">
+    <table class="w3-table">
+      <tr>
+        <td>Items({{items.length}})</td>
+        <td>${{total}}</td>
+      </tr>
+      <tr>
+        <td>Shipping & Handling</td>
+        <td>$10</td>
+      </tr>
+      <tr>
+        <td>
+          <b>Order Total</b>
+        </td>
+        <td>
+          <b>${{total+10}}</b>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <button [disabled]="step===4" *ngIf="step === 3 || step === 4" [disabled]="customerForm.invalid" class="w3-button w3-block w3-green" (click)="submit(customerForm)">
+        <i *ngIf="step === 4" class="fa fa-spinner fa-spin"></i><b> {{btnText}}</b>
+    </button>
+  </div>
+  <div *ngIf="step === 5" class="w3-text-green w3-large">
+    <span class="w3-badge w3-green" ><i *ngIf="step > 2" class="fa fa-check"></i></span>
+    Your order is successfully. Please check your email to see more detail.
+  </div>
+  <hr>
+  <p>Need Some Help?</p>
+  <br>
+  <br>
+  <!-- {{customerForm.value | json}}
+  {{customerForm.invalid}} -->
+</form>
