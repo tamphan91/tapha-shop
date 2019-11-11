@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ProductType } from '../../model/ProductType';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, fromEvent, Observable, Subject } from 'rxjs';
 import * as $ from 'jquery';
 import { DataService } from '../../services/data.service';
 import { LoginComponent } from '../login/login.component';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -14,7 +12,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild(LoginComponent) child: LoginComponent;
+  @ViewChild(LoginComponent, { static: true }) child: LoginComponent;
   searchString: string;
   title: string;
   expandName = '';
