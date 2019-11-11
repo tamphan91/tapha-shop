@@ -4,7 +4,7 @@
   <h1>Subscribe</h1>
   <p>To get special offers and VIP treatment:</p>
   <p>
-    <input [disabled]="isSubcribing" [(ngModel)]="emailToSubscribe" required email name="subMail"  #subMail="ngModel" class="w3-input w3-border" type="email" placeholder="Enter e-mail" style="width:100%">
+    <input [disabled]="isSubcribing" (click)="clearText()" [(ngModel)]="emailToSubscribe" required email name="subMail"  #subMail="ngModel" class="w3-input w3-border" type="email" placeholder="Enter e-mail" style="width:100%">
   </p>
   <button [disabled]="subMail.invalid || isSubcribing" (click)="subscribe()" type="button" class="w3-button w3-red w3-margin-bottom">{{btnText}}</button>
 </div>

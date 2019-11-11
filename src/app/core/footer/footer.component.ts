@@ -24,10 +24,21 @@ export class FooterComponent implements OnInit {
   subscribe() {
     this.isSubcribing = true;
     const emailToSend = this.emailToSubscribe;
-    this.emailToSubscribe = 'THANK YOU FOR YOUR SUBSCRIBING!';
     this.btnText = 'Subscribing...';
+    this.commonService.subscribe(emailToSend).subscribe(data => {
+      console.log(data);
+      this.btnText = 'Subscribe';
+      this.emailToSubscribe = 'THANK YOU FOR YOUR SUBSCRIBING!';
+      this.isSubcribing = false;
+    });
   }
 
   send() {
+  }
+
+  clearText() {
+    if (this.emailToSubscribe === 'THANK YOU FOR YOUR SUBSCRIBING!') {
+      this.emailToSubscribe = '';
+    }
   }
 }
