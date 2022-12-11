@@ -23,7 +23,7 @@
     "@angular/router": "^8.2.13",
     "@types/angular": "^1.6.56",
     "core-js": "^2.6.10",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jquery": "^3.4.1",
     "jssor-slider": "^27.5.0",
     "path": "^0.12.7",
